@@ -1,21 +1,108 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>College Store Room Status</title>
-  <meta charset="UTF-8">
+<title>College Store Room Status</title>
+
+<style>
+
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#4facfe,#00f2fe);
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:0;
+}
+
+.card{
+background:white;
+padding:40px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.3);
+text-align:center;
+width:350px;
+}
+
+h1{
+margin-bottom:20px;
+}
+
+.status{
+font-size:32px;
+font-weight:bold;
+padding:15px;
+border-radius:10px;
+}
+
+.open{
+background:#28a745;
+color:white;
+}
+
+.closed{
+background:#dc3545;
+color:white;
+}
+
+.time{
+margin-top:15px;
+color:gray;
+font-size:14px;
+}
+
+</style>
 </head>
 
-<body style="text-align:center;font-family:Arial; margin-top:50px;">
-  <h1>College Store Room</h1>
+<body>
 
-  <h2 id="status">Loading...</h2>
+<div class="card">
 
-  <script>
-    // TEMPORARY demo value (we'll replace later)
-    let storeStatus = "CLOSED";
+<h1>🏫 College Store Room</h1>
 
-    document.getElementById("status").innerText =
-      "STORE ROOM " + storeStatus;
-  </script>
+<div id="status" class="status">
+Loading...
+</div>
+
+<div class="time">
+Auto updates every 10 seconds
+</div>
+
+</div>
+
+<script>
+
+function updateStatus(){
+
+fetch("https://api.thingspeak.com/channels/3276103/fields/1/last.json")
+
+.then(response => response.json())
+
+.then(data => {
+
+let statusBox = document.getElementById("status");
+
+if(data.field1 == 1){
+
+statusBox.innerHTML = "🟢 STORE ROOM OPEN";
+statusBox.className = "status open";
+
+}else{
+
+statusBox.innerHTML = "🔴 STORE ROOM CLOSED";
+statusBox.className = "status closed";
+
+}
+
+});
+
+}
+
+updateStatus();
+
+setInterval(updateStatus,10000);
+
+</script>
+
 </body>
 </html>
